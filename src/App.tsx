@@ -1,34 +1,50 @@
+
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { Button } from './components/ui/button'
+import { Input } from './components/ui/input'
+import { Todo } from './Interface/Todo'
+import TodoItem from './lib/TodoItem'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [value,setValue]=useState("")
+  const [todoList,setTodoList]=useState(new Array<Todo>())
+  const onClickAdd=function(){
 
+    let todo:Todo={
+      id:todoList.length,
+      title:value,
+      content:"",
+      isCompleted:false
+          }
+          todoList.push(todo);
+          let todoList2=[...todoList]
+          setTodoList(todoList2)
+          setValue("")
+          
+  }
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+   <div >
+    <div>
+   <Input placeholder='Add Something' value={value} onChange={(e)=>{
+    console.log(e);
+    setValue(e.target.value);
+   }}>
+    
+   </Input>
+   </div>
+   <div>
+    <Button disabled={value.trim()===""} onClick={()=>{ onClickAdd()}}>
+      Add 
+    </Button>
+    </div>
+          <div>
+          {todoList.map((todo,ind)=>{return (<TodoItem key={ind} todoItem={todo}></TodoItem>)})}
+
+          </div>
+
+   </div>
+
   )
 }
 
