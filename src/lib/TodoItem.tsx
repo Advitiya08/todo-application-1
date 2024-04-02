@@ -1,6 +1,6 @@
 import { Todo } from '@/Interface/Todo'
 import { Checkbox } from '@/components/ui/checkbox'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 interface TodoItemProps {
     todoItem: Todo,
     checkBoxModifed?: Function
