@@ -8,13 +8,17 @@ import TodoItem from './lib/TodoItem'
 
 function App() {
   
- 
+  
   const [value,setValue]=useState("")
   const [todoList,setTodoList]=useState<Todo[]>(()=>{
     let todos=localStorage.getItem('todoList')
     if(todos)
     return JSON.parse(todos)
   return[]})
+  const deleteTodoItem=function(id:number){
+    setTodoList(todoList.filter(x=>x.id!==id))
+
+  }
   useEffect(()=>{console.log(todoList)
     localStorage.setItem('todoList',JSON.stringify(todoList))},[todoList])
   const onClickAdd=function(){
@@ -60,7 +64,7 @@ function App() {
     </Button>
     </div>
           <div>
-          {todoList.map((todo,ind)=>{return (<TodoItem checkBoxModifed={(id:any,flag:any)=>{checkChanged(id,flag)}} key={ind} todoItem={todo}></TodoItem>)})}
+          {todoList.map((todo,ind)=>{return (<TodoItem checkBoxModifed={(id:any,flag:any)=>{checkChanged(id,flag)}} deleteTodoItem={deleteTodoItem} key={ind} todoItem={todo}></TodoItem>)})}
 
           </div>
 
