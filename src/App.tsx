@@ -1,17 +1,17 @@
 
 import { useEffect, useState } from 'react'
 import './App.css'
+import { Todo } from './Interface/Todo'
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
-import { Todo } from './Interface/Todo'
+import { useJokes } from './hooks/useJokes'
 import TodoItem from './lib/TodoItem'
-import axios from 'axios'
-import { JokeResponseModel } from './Interface/JokeResponseModel'
+
 function App() {
   
-  
+  const {joke,isLoading,fetchMoreJokes}=useJokes()
   const [value,setValue]=useState("")
-  const [joke,setJoke]=useState<JokeResponseModel | null>(null)
+ 
   const [todoList,setTodoList]=useState<Todo[]>(()=>{
     let todos=localStorage.getItem('todoList')
     if(todos)
@@ -21,15 +21,8 @@ function App() {
     setTodoList(todoList.filter(x=>x.id!==id))
     
   }
-  const initialiseJoke=()=>{
-    axios.get<JokeResponseModel>('https://v2.jokeapi.dev/joke/Programming')
-    .then((res)=>{
-      setJoke(res.data) 
-    
-    }) 
-    .catch((err)=>console.error(`error in response ${err}`));
-  }
-  useEffect(()=>{initialiseJoke()},[])
+  
+  useJokes()
   useEffect(()=>{console.log(todoList)
     localStorage.setItem('todoList',JSON.stringify(todoList))},[todoList])
   const onClickAdd=function(){
@@ -63,12 +56,14 @@ function App() {
       <h1>
         Start Your day with a joke
       </h1>
-
+      {isLoading && <p> Joke Loading Wait .....</p>}
       {joke && joke.joke?<p className='my-8'> {joke.joke}</p>:null}
       {joke && joke.setup?<p className='my-8'>Quesion? {joke.setup}</p>:null}
       {joke && joke.delivery?<p className='my-8'>Response? {joke.delivery}</p>:null}
 
-      {joke?<Button onClick={()=>{initialiseJoke()}}> More Joke ...</Button>:null}
+      {joke?<Button onClick={()=>{
+        
+        fetchMoreJokes()}}> More Joke ...</Button>:null}
 
     </div>
     <div>
